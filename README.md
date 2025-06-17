@@ -109,43 +109,53 @@ erp2.plot_joint(title="ERP + Topomap - Druga verzija (visual/left)", times=[0.2,
 ---
 
 
-## 12. Power Spectral Density (PSD) - početna verzija 
+## 12. Power Spectral Density (PSD)
 ![](/pics/12.png)
 
-Prikaz raspodele snage signala po frekvencijama za kanal eeg01. Ovo pomaže u identifikaciji dominantnih frekvencija, kao što su alfa, beta, gama talasi, i može ukazivati na potencijalne artefakte ili specifične moždane aktivnosti.
-
+Prikaz raspodele snage signala po frekvencijama za kanal eeg01. Ovako se olaksava identifikovanje dominantnih frekvencija tj. alfa, beta, gama talasi, a moze i ukazivati na potencijalne artefakte ili specificne mozdane aktivnosti.
+```python 
+psd1 = epochs['auditory/left'].compute_psd(fmin=1, fmax=40)
+psd1.plot(picks="eeg01", average=True, spatial_colors=True)
+```
 ---
 
-## 13. PSD analiza za kanal eeg02 - druga verzija 
+## 13. PSD analiza za kanal eeg02
 ![](/pics/13.png)
 
-Slična analiza kao prethodna, ali za drugi kanal i sa drugačijim podešavanjima (npr. bez proseka), što može otkriti dodatne informacije o frekvencijskoj strukturi signala.
-
+Slicna analiza kao prethodna ali za drugi kanal (eeg02) i sa za nijansu drugacijim parametrima (bez proseka).
+```python 
+psd1.plot(picks="eeg02", average=False, spatial_colors=False)
+```
 ---
 
-## 14. Heatmap signala eeg01 sa manjim sigma 
+## 14. Heatmap signala eeg01
 ![](/pics/14.png)
 
-Heatmap prikazuje snagu signala kroz vreme i frekvenciju, gde je sigma parametar koji kontroliše glatkoću prikaza. Manji sigma daje detaljniji i oštriji prikaz, ali sa više šuma.
-
+Heatmap prikazuje snagu signala kroz vreme i frekvenciju gde je sigma parametar koji odredjuje glatkocu prikaza. Manji sigma daje detaljniji i ostriji prikaz ali sa više suma.
+```python 
+epochs['auditory/left'].plot_image(picks="eeg01", sigma=0.1, title="Heatmap eeg01 - Pocetna verzija")
+```
 ---
 
 ## 15. Heatmap signala eeg01 sa većim sigma 
 ![](/pics/15.png)
 
-Veći sigma daje glatkiji, „mekši“ prikaz signala, pomažući da se uoče veći obrasci i smanjuje šum, ali može izostaviti fine detalje.
-
+Povecanjem sigma parametra dobija se „meksi“ prikaz signala, cime se olaksava uocavanje vecih obrazaca i smanjuje sum ali ipak moze izostaviti fine detalje.
+```python 
+epochs['auditory/left'].plot_image(picks="eeg01", sigma=0.3, title="Heatmap eeg01 - Druga verzija")
+```
 ---
 
 ## 16. Poređenje ERP signala auditory i visual stimulusa 
 ![](/pics/16.png)
 
-Na ovoj slici je prikazano poređenje ERP signala sa dva različita tipa stimulusa na kanalu eeg01. Vidljive su razlike u amplitudama i vremenskim obrascima, što ukazuje na različite moždane procese aktivirane auditivnim i vizuelnim stimulusom.
-
+Na ovoj slici je prikazano poređenje ERP signala sa dva razlicita tipa stimulusa na kanalu eeg01. Vidljive su razlike u amplitudama i vremenskim obrascima sto ukazuje na razlicite mozdane procese aktivirane auditivnim i vizuelnim stimulusom.
+```python 
+plt.plot(erp1.times, erp1.data[erp1.ch_names.index("eeg01")] * 1e6, label='Auditory Left')
+plt.plot(erp2.times, erp2.data[erp2.ch_names.index("eeg01")] * 1e6, label='Visual Left', linestyle='--')
+```
 ---
 
-# Zaključak
+# Zakljucak
 
-Ova analiza demonstrira osnovne tehnike u obradi EEG signala, sa naglaskom na vizualizaciju i poređenje podataka pre i posle različitih koraka obrade. Posebno je istaknuta uloga prosečne reference u čišćenju signala, kao i značaj višestrukih vrsta vizualizacija (topomap, ERP, PSD, heatmap) za razumevanje složenih moždanih odgovora.
-
-Ove tehnike predstavljaju temelj za naprednije EEG analize i mogu se koristiti u neuroznanosti, kliničkoj dijagnostici i razvoju BCI (Brain-Computer Interface) sistema.
+Ova analiza demonstrira osnovne tehnike u obradi EEG signala sa naglaskom na vizualizaciju i poredjenje podataka pre i posle razlicitih koraka obrade. Primenjene su visestruke vrste vizualizacija (topomap, ERP, PSD, heatmap).
