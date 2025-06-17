@@ -100,7 +100,7 @@ fig2.suptitle("Topomap - Druga verzija (visual/left)")
 ## 10. Joint prikaz ERP signala i topomap 
 ![](/pics/10.png)     ![](/pics/11.png)
 
-Na slici levo - kombinovani prikaz koji pokazuje kako se ERP oblik i prostorna aktivnost u mozgu menjaju u vremenu. Na slici desno - slican koncept kao i na prethodnoj slici ali sa modifikovanim vremenskim intervalima i parametrima za bolju jasnocu i razlicite uvide u podatke.
+Na slici gore - kombinovani prikaz koji pokazuje kako se ERP oblik i prostorna aktivnost u mozgu menjaju u vremenu. Na slici dole - slican koncept kao i na prethodnoj slici ali sa modifikovanim vremenskim intervalima i parametrima za bolju jasnocu i razlicite uvide u podatke.
 ```python 
 erp1.plot_joint(title="ERP + Topomap - Pocetna verzija (auditory/left)", times=[0.1, 0.2])
 erp2.plot_joint(title="ERP + Topomap - Druga verzija (visual/left)", times=[0.2, 0.3])
