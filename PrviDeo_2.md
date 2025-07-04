@@ -11,7 +11,7 @@ raws = [read_raw_edf(f[0], preload=True, verbose=False) for f in raw_files]
 raw = concatenate_raws(raws)
 
 raw.pick_types(eeg=True, exclude='bads')  # Izbor EEG kanala
-raw.set_eeg_reference('average', projection=True)  # Prosečna EEG referenca
+raw.set_eeg_reference('average', projection=True)  # Prosecna EEG referenca
 raw.filter(7., 30., fir_design='firwin', verbose=False)  # Band-pass filter
 
 events, event_id = mne.events_from_annotations(raw)  # Događaji i njihova ID mapa
