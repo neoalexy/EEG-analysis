@@ -14,7 +14,7 @@ raw.pick_types(eeg=True, exclude='bads')  # Izbor EEG kanala
 raw.set_eeg_reference('average', projection=True)  # Prosecna EEG referenca
 raw.filter(7., 30., fir_design='firwin', verbose=False)  # Band-pass filter
 
-events, event_id = mne.events_from_annotations(raw)  # Događaji i njihova ID mapa
+events, event_id = mne.events_from_annotations(raw)  # Dogadjaji i njihova ID mapa
 epochs = mne.Epochs(raw, events, event_id=wanted_events, tmin=0.5, tmax=2.5,
                     baseline=None, preload=True, verbose=False)  # Segmentacija u epohe
 ```
