@@ -78,7 +78,7 @@ Tacnost: 0.830 ± 0.154
 ### 4. Vizualizacija rezultata
 Na grafikonu ispod prikazano je poredjenje tacnosti svih varijanti CSP analize.
 Grafikon jasno pokazuje varijabilnost performansi razlicitih konfiguracija sto pomaze u odabiru optimalnih parametara.
-
+![](/pics/realni_podaci_grafikon.png)
 
 
 
