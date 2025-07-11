@@ -520,7 +520,7 @@ def run(raw):
 
     results = []
     for p in params_variants:
-        print(f"\nPokrećem: {p['desc']}")
+        print(f"\nPokrecem: {p['desc']}")
         epochs_filtered = epochs.copy().filter(p['freq'][0], p['freq'][1], fir_design='firwin', verbose=False)
         X = epochs_filtered.get_data()
         y = labels
