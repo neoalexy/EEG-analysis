@@ -567,3 +567,135 @@ CSP efficiently emphasizes discriminative spatial patterns while LDA classifier 
 Additionally, signal frequency range is significant factor for result optimization.
 
 ---
+# Part Two - Real Data: Loading, Segmentation and CSP Analysis with Classification
+
+In this part, we work with loading real EEG data from EDF files and events from TSV files. The data is filtered, segmented into epochs based on given events, and then the existing CSP analysis (PartOne_1) and classification for distinguishing motor tasks is applied.
+
+### 1. Data Loading and Preparation
+
+First, the EEG signal is loaded from the EDF file and then average reference and filtering in the frequency range from 7 to 30 Hz is applied to extract significant oscillations.
+
+```python
+raw = mne.io.read_raw_edf(edf_path, preload=True, verbose=False)
+raw.set_eeg_reference('average', projection=True)
+raw.filter(7., 30., fir_design='firwin', verbose=False)
+```
+
+Then the TSV file with events is loaded and events relevant to the task are filtered (e.g., labels T0, T1, T2), and an event_id map is defined that assigns a unique number to each class.
+
+```python
+events_df = pd.read_csv(events_tsv_path, sep='\t')
+wanted = [val for val in sorted(set(events_df['value'])) if any(t in val for t in ['T0','T1','T2'])]
+event_id = {val: idx+1 for idx, val in enumerate(wanted)}
+```
+
+An events array for MNE is created that contains the time of event occurrence in samples, placeholder 0 and class ID:
+
+```python
+events = np.array([
+    [int(row['sample']), 0, event_id[row['value']]] 
+    for _, row in events_df.iterrows() if row['value'] in event_id
+])
+```
+
+Finally, the signal is segmented into epochs (0.5 to 2.5 seconds after the event), without baseline correction:
+
+```python
+epochs = mne.Epochs(raw, events, event_id=event_id, tmin=0.5, tmax=2.5,
+                    baseline=None, preload=True, verbose=False)
+```
+
+This step provides time intervals that are used for further analysis and classification.
+
+### 2. Data and Events Overview
+
+```python
+epochs = mne.Epochs(raw, events, event_id=event_id, tmin=0.5, tmax=2.5,
+                    baseline=None, preload=True, verbose=False)
+```
+
+The following useful information is obtained:
+- Number of epochs: 30
+- Class TASK1T0: 15 epochs
+- Class TASK1T1: 8 epochs
+- Class TASK1T2: 7 epochs
+- Used Annotations descriptions: ['T0', 'T1', 'T2']
+- Event ID map: {'T0': 1, 'T1': 2, 'T2': 3}
+- Used events: {'T0': 1, 'T1': 2}
+
+### 3. CSP Analysis and Classification
+
+Four variants of CSP analysis with different parameters (number of CSP components, classifier, frequency range) are defined and for each variant:
+- epochs are filtered in the specified frequency range
+- CSP components are calculated
+- classifier (LDA or SVC) is trained using 5-fold cross-validation
+- average accuracy and standard deviation are recorded
+
+```python
+params_variants = [
+    {'n_csp': 4, 'clf': LDA(), 'freq': (7, 30),
+     'desc': 'Original version: 4 CSP components, LDA classifier, 7-30 Hz'},
+    {'n_csp': 6, 'clf': LDA(), 'freq': (7, 30),
+     'desc': 'Variant 1: 6 CSP, LDA, 7-30 Hz'},
+    {'n_csp': 4, 'clf': SVC(kernel="linear"), 'freq': (7, 30),
+     'desc': 'Variant 2: 4 CSP, SVC (linear), 7-30 Hz'},
+    {'n_csp': 4, 'clf': LDA(), 'freq': (8, 26),
+     'desc': 'Variant 3: 4 CSP, LDA, 8-26 Hz'},
+]
+```
+
+Running:
+- Original version: 4 CSP components, LDA classifier, 7-30 Hz
+  Accuracy: 0.790 ± 0.128
+- Variant 1: 6 CSP, LDA, 7-30 Hz
+  Accuracy: 0.830 ± 0.154
+- Variant 2: 4 CSP, SVC (linear), 7-30 Hz
+  Accuracy: 0.710 ± 0.156
+- Variant 3: 4 CSP, LDA, 8-26 Hz
+  Accuracy: 0.830 ± 0.154
+
+### 4. Results Visualization
+
+The graph below shows a comparison of accuracy for all CSP analysis variants. The graph clearly shows the variability in performance of different configurations, which helps in selecting optimal parameters.
+
+### 5. Complete Code
+
+```python
+import mne
+import pandas as pd
+import numpy as np
+from csp_analysis import run
+
+# Part Two - real_data.py
+edf_path = r"D:\IMR-PROJEKAT\ds004362\sourcedata\rawdata\S109\S109R03.edf"
+events_path = r"D:\IMR-PROJEKAT\ds004362\sub-109\eeg\sub-109_task-motion_run-3_events.tsv"
+
+# signal loading
+raw = mne.io.read_raw_edf(edf_path, preload=True, verbose=False)
+# average reference
+raw.set_eeg_reference('average', projection=True)
+raw.filter(7., 30., fir_design='firwin', verbose=False)
+
+# loading and filtering events for relevant classes (T0, T1, T2)
+events_df = pd.read_csv(events_path, sep='\t')
+wanted = [val for val in sorted(set(events_df['value'])) if any(t in val for t in ['T0','T1','T2'])]
+# map that I later convert to array
+event_id = {val: idx+1 for idx, val in enumerate(wanted)}
+
+# events array
+events = np.array([
+    [int(row['sample']), 0, event_id[row['value']]] 
+    for _, row in events_df.iterrows() if row['value'] in event_id
+])
+
+# creating epochs (0.5 to 2.5s after event)
+epochs = mne.Epochs(raw, events, event_id=event_id, tmin=0.5, tmax=2.5,
+                    baseline=None, preload=True, verbose=False)
+
+print(f"Number of epochs: {len(epochs)}")
+for k, v in event_id.items():
+    print(f"Class {k}: {np.sum(epochs.events[:, 2] == v)} epochs")
+
+# existing csp analysis/classification
+run(raw)
+```
