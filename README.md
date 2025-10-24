@@ -1,4 +1,5 @@
 # EEG Signal Analysis and Visualization - MNE-Python
+This project was developed as part of the Brain-Computer Interface course. It demonstrates EEG signal processing, visualization, and classification techniques using both simulated and real EEG data.
 # Table of Contents
 
 1. [Part One – Simulated EEG Data and Visualization](#part-one--simulated-eeg-data-and-visualization)  
