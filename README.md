@@ -1,4 +1,26 @@
 # EEG Signal Analysis and Visualization - MNE-Python
+# Table of Contents
+
+1. [Part One – Simulated EEG Data and Visualization](#part-one--simulated-eeg-data-and-visualization)  
+   - [Sensor Display (2D and 3D)](#sensor-display-2d-and-3d)  
+   - [Raw EEG Signal and Average Reference](#raw-eeg-signal-and-average-reference)  
+   - [Segmentation (Epochs) and ERP Analysis](#segmentation-epochs-and-erp-analysis)  
+   - [Topomap and PSD Visualizations](#topomap-and-psd-visualizations)  
+   - [Heatmap and ERP Signal Comparison for Different Stimuli](#heatmap-and-erp-signal-comparison-for-different-stimuli)  
+
+2. [Part One – CSP Analysis and Classification (Motor Imagery)](#part-one--csp-analysis-and-classification-motor-imagery)  
+   - [Data Preparation and Filtering](#data-preparation-and-filtering)  
+   - [Defining CSP and Classifier Parameter Variants](#defining-csp-and-classifier-parameter-variants)  
+   - [CSP Computation, Training, and Cross-Validation](#csp-computation-training-and-cross-validation)  
+   - [Results Visualization and Variant Comparison](#results-visualization-and-variant-comparison)  
+
+3. [Part Two – Real EEG Data and Classification](#part-two--real-eeg-data-and-classification)  
+   - [Loading EDF and TSV Files](#loading-edf-and-tsv-files)  
+   - [Signal Segmentation into Epochs](#signal-segmentation-into-epochs)  
+   - [Applying Previous CSP Analysis and Classification](#applying-previous-csp-analysis-and-classification)  
+   - [Results and Classification Accuracy Visualization](#results-and-classification-accuracy-visualization)
+
+
 ## Part One - First Example
 
 This analysis demonstrates processing and visualization of EEG signals using the MNE-Python library with the goal of demonstrating basic steps in EEG signal processing including filtering, segmentation (epochs), averaging (ERP). For better understanding of parameter changes in EEG signal analysis, comparisons of similar waves with some types of modifications are presented.
